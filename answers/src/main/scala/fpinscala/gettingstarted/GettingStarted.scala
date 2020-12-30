@@ -55,7 +55,7 @@ object MyModule {
 
   // We can generalize `formatAbs` and `formatFactorial` to
   // accept a _function_ as a parameter
-  def formatResult(name: String, n: Int, f: Int => Int) = {
+  def formatResult(name: String, n: Int, f: Int => Int): String = {
     val msg = "The %s of %d is %d."
     msg.format(name, n, f(n))
   }
@@ -84,7 +84,7 @@ object AnonymousFunctions {
     println(formatResult("absolute value", -42, abs))
     println(formatResult("factorial", 7, factorial))
     println(formatResult("increment", 7, (x: Int) => x + 1))
-    println(formatResult("increment2", 7, (x) => x + 1))
+    println(formatResult("increment2", 7, x => x + 1))
     println(formatResult("increment3", 7, x => x + 1))
     println(formatResult("increment4", 7, _ + 1))
     println(formatResult("increment5", 7, x => { val r = x + 1; r }))
@@ -154,14 +154,12 @@ object PolymorphicFunctions {
 
   // Note that `=>` associates to the right, so we could
   // write the return type as `A => B => C`
-  def curry[A,B,C](f: (A, B) => C): A => (B => C) =
-    a => b => f(a, b)
+  def curry[A,B,C](f: (A, B) => C): A => B => C = a => b => f(a, b)
 
   // NB: The `Function2` trait has a `curried` method already
 
   // Exercise 4: Implement `uncurry`
-  def uncurry[A,B,C](f: A => B => C): (A, B) => C =
-    (a, b) => f(a)(b)
+  def uncurry[A,B,C](f: A => B => C): (A, B) => C = (a, b) => f(a)(b)
 
   /*
   NB: There is a method on the `Function` object in the standard library,
@@ -175,6 +173,5 @@ object PolymorphicFunctions {
 
   // Exercise 5: Implement `compose`
 
-  def compose[A,B,C](f: B => C, g: A => B): A => C =
-    a => f(g(a))
+  def compose[A,B,C](f: B => C, g: A => B): A => C = a => f(g(a))
 }
